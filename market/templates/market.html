@@ -1,0 +1,54 @@
+{%extends 'base.html'%}
+{%block title%}
+Market Place
+{%endblock%}
+{%block content%}
+<h1>Market Place</h1>
+    
+    <table class="table table-striped table-hover">
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Barcode</th>
+                <th scope="col">Price</th>
+                <th scope="col">Options</th>
+              </tr>
+            </thead>
+            <tbody>
+                {%for item in items%}
+                <tr>
+                    <td>{{item.id}}</td> 
+                    <td>{{item.name}} </td>
+                    <td>{{item.barcode}} </td>
+                    <td>${{item.price}} </td>
+                    <td> 
+                        <button class="btn btn-outline btn-info">Description </button>
+                        <button class="btn btn-outline btn-success">Purchase </button>
+                    </td>
+                </tr>
+                    {%endfor%}
+             {#<tr>
+              <th scope="row">{{items[0].get("id")}}</th>
+              <td>{{items[0].get("Name")}}</td>
+              <td>{{items[0].get("Barcode")}}</td>
+              <td>{{items[0].get("Price")}}</td>
+            </tr>
+            <tr>
+              <th scope="row">{{items[1].get("id")}}</th>
+              <td>{{items[1].get("Name")}}</td>
+              <td>{{items[1].get("Barcode")}}</td>
+              <td>{{items[1].get("Price")}}</td>
+            </tr>
+            <tr>
+              <th scope="row">{{items[2].get("id")}}</th>
+              <td>{{items[2].get("Name")}}</td>
+              <td>{{items[2].get("Barcode")}}</td>
+              <td>{{items[2].get("Price")}}</td>
+            </tr>#} 
+            </tbody>
+          </table>
+      </table>
+{%endblock%}
+
