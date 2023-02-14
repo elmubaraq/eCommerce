@@ -5,3 +5,4 @@ app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///market.db'
 app.config["SECRET_KEY"]='bdfbcdc502722bc560583a98'
 db=SQLAlchemy(app)
 from market.models import Item,User
+from flask import Flask
