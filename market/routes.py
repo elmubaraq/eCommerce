@@ -24,8 +24,8 @@ def market_page():
 def register_page(): 
     form = RegistrationForm()
     if form.validate_on_submit():
-        user_to_create= User(username=form.username.data,
-                             email_address=form.email_address.data, password_hash=form.password1.data)
+        user_to_create= User(username=form.username.data.strip(),
+                             email_address=form.email_address.data.strip(), password=form.password1.data)
         
         #with app.app_context():
             #db.create_all()
