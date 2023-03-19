@@ -12,12 +12,38 @@
   <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-color: black;">
         <div class="container-fluid">
-          <a class="navbar-brand" href="{{url_for('market_page')}}">Flask Market</a>
+          <a class="navbar-brand" href="{{url_for('root')}}">Flask Market</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{url_for('root')}}">Home</a>
+
+              {% if current_user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{url_for('market_page')}}">Market</a>    
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Dropdown
+                </a>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{url_for('logout_page')}}">Logout</a>    
+              </li> 
+              <li class="nav-item">
+                <a class="nav-link">{{current_user.username}}</a>
+              </li>  
+              <li class="nav-item">
+                <a class="nav-link" style="color: lawngreen; font-weight:bold;">
+                <i class="fas fa-coins"></i>
+                {{current_user.prettier_budget}}
+                </a>
+              </li>   
+           
+              </li>
+              {% elif current_user.is_anonymous %}
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="{{url_for('root')}}">Home</a>
               </li>
@@ -27,14 +53,8 @@
               <li class="nav-item">
                 <a class="nav-link" href="{{url_for('register_page')}}">Register</a>
               </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Dropdown
-                </a>
-              <li class="nav-item">
-                <a class="nav-link" href="#">{{current_user.username}}</a>
-              </li>     
-           
+              {% endif %}
+              
           </div>
         </div>
       </nav>
