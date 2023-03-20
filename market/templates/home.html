@@ -3,5 +3,17 @@
 home
 {%endblock%}
 {%block content%}
-<p>This is the content yet</p>
+<div class="card text-center">
+    <div class="card-header">
+      Featured
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Welcome to Flask Market</h5>
+      <p class="card-text">Kindly proceed to register or log in.</p>
+      <a href="{{url_for('register_page')}}" class="btn btn-primary">Register here and get started!</a>
+    </div>
+    <div class="card-footer text-muted">
+      eCommerce at its best!
+    </div>
+  </div>
 {%endblock%}

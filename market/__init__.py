@@ -8,4 +8,7 @@ app.config["SECRET_KEY"]='bdfbcdc502722bc560583a98'
 db=SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
+login_manager.login_view ="login_page"
+login_manager.login_message_category="info"
+login_manager.login_message= "Please login before continuing to the Market page"
 from market.models import Item,User

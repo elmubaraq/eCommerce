@@ -2,8 +2,8 @@ from market import app
 from flask import render_template,redirect, url_for, flash, get_flashed_messages
 from market import Item, User, db
 from market.forms import RegistrationForm, LoginForm
-from flask_login import login_user, logout_user
-@app.route('/home')
+from flask_login import login_user, logout_user, login_required
+@app.route('/')
 def root():
     return render_template('home.html')
 @app.route('/land/<param>', methods=['GET','POST'])
@@ -11,6 +11,7 @@ def landing(param):
     param=len('FIC')
     return render_template('landingpage.html',param=param)
 @app.route('/market')
+@login_required
 def market_page():
     items= Item.query.all()
     
@@ -31,6 +32,7 @@ def register_page():
             #db.create_all()
         db.session.add(user_to_create)
         db.session.commit()
+        login_user(user_to_create)
         flash(f'Hello {user_to_create.username}, Your  registration was successfully!', category="success")
         return redirect(url_for('market_page'))
     
