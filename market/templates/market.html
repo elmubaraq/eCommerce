@@ -1,11 +1,10 @@
-{%extends 'base.html'%}
-{%block title%}
+{% extends 'base.html'%}
+{% block title %}
 Market Place
-{%endblock%}
-{%block content%}
-{% include 'includes/items_modals.html' %}
+{% endblock %}
+{% block content %}
 <h1>Market Place</h1>
-<div class="container text-center">
+<div class="container" style="margin-left:1px;">
   <!-- Stack the columns on mobile by making one full-width and the other half-width -->
   <div class="row">
     <div class="col-md-8">
@@ -22,19 +21,20 @@ Market Place
               </tr>
             </thead>
             <tbody>
-                {%for item in items%}
+                {% for item in items %}
+                {% include 'includes/items_modals.html' %}
                 <tr>
                     <td>{{item.id}}</td> 
                     <td>{{item.name}} </td>
                     <td>{{item.barcode}} </td>
                     <td>${{item.price}} </td>
                     <td> 
-                        <button class="btn btn-outline btn-info" style="margin: 2px 2px;"  data-toggle="modal" data-target="#exampleModal">Description </button> 
-                        <button class="btn btn-outline btn-success" style="margin: 2px 2px;">Purchase </button>
+                        <button class="btn btn-outline btn-info" style="margin: 2px 2px;" data-bs-toggle="modal" data-bs-target="#description-modal-{{item.id}}">Description </button> 
+                        <button class="btn btn-outline btn-success" style="margin: 2px 2px;" data-bs-toggle="modal" data-bs-target="#purchase-modal-{{item.id}}">Purchase </button>
                     </td>
                 </tr>
-                    {%endfor%}
-             {#<tr>
+                    {% endfor %}
+             {# <tr>
               <th scope="row">{{items[0].get("id")}}</th>
               <td>{{items[0].get("Name")}}</td>
               <td>{{items[0].get("Barcode")}}</td>
@@ -51,7 +51,7 @@ Market Place
               <td>{{items[2].get("Name")}}</td>
               <td>{{items[2].get("Barcode")}}</td>
               <td>{{items[2].get("Price")}}</td>
-            </tr>#} 
+            </tr> #} 
             </tbody>
           </table>
       </table>
@@ -62,5 +62,5 @@ Market Place
     </div>
   </div> 
     
-{%endblock%}
+{% endblock %}
 

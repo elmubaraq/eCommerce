@@ -1,7 +1,7 @@
 from market import app
 from flask import render_template,redirect, url_for, flash, get_flashed_messages
 from market import Item, User, db
-from market.forms import RegistrationForm, LoginForm
+from market.forms import RegistrationForm, LoginForm, PurchaseItemForm, SellItemForm
 from flask_login import login_user, logout_user, login_required
 @app.route('/')
 def root():
@@ -12,15 +12,21 @@ def landing(param):
     return render_template('landingpage.html',param=param)
 @app.route('/market')
 @login_required
-def market_page():
-    items= Item.query.all()
+def market_page(methods=['GET','POST']):
+    purchase_form = PurchaseItemForm()
+    if purchase_form.validate_on_submit():
+        #note that the purchase_form is a dict with keys 'submit' which has also has html attribute
+        #<input id="" name="" type="" value="">
+        #and we'll copy this to the top of our submit button for altering
+        print(purchase_form)
+    items = Item.query.all()
     
     """[{"id":1,"name":"phone","barcode":"8886","Price":1200},{
         "id":2,"name":"Keyboard","barcode":"8886","Price":5
         },{"id":3,"name":"Laptop","barcode":"8886","price":700
             
         }]"""
-    return render_template('market.html', items=items)
+    return render_template('market.html', items = items, purchase_form = purchase_form)
 @app.route("/register", methods=['GET','POST'])
 def register_page(): 
     form = RegistrationForm()
@@ -56,5 +62,5 @@ def login_page():
 @app.route('/logout', methods=['GET','POST'])
 def logout_page():
     logout_user()
-    flash("You have been logged out!",category='info')
+    flash("You have been logged out!", category='info')
     return redirect(url_for("root"))
