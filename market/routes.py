@@ -18,7 +18,7 @@ def market_page(methods=['GET','POST']):
         #note that the purchase_form is a dict with keys 'submit' which has also has html attribute
         #<input id="" name="" type="" value="">
         #and we'll copy this to the top of our submit button for altering
-        print(purchase_form)
+        print(purchase_form.__dict__)
     items = Item.query.all()
     
     """[{"id":1,"name":"phone","barcode":"8886","Price":1200},{
