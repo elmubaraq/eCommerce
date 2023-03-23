@@ -1,8 +1,8 @@
 from market import app
-from flask import render_template,redirect, url_for, flash, get_flashed_messages
+from flask import render_template,redirect, url_for, flash, get_flashed_messages,request
 from market import Item, User, db
 from market.forms import RegistrationForm, LoginForm, PurchaseItemForm, SellItemForm
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 @app.route('/')
 def root():
     return render_template('home.html')
@@ -10,16 +10,32 @@ def root():
 def landing(param):
     param=len('FIC')
     return render_template('landingpage.html',param=param)
-@app.route('/market')
+@app.route('/market', methods=['GET','POST'])
 @login_required
-def market_page(methods=['GET','POST']):
+def market_page():
     purchase_form = PurchaseItemForm()
     if purchase_form.validate_on_submit():
         #note that the purchase_form is a dict with keys 'submit' which has also has html attribute
-        #<input id="" name="" type="" value="">
+        #print(purchase_form['submit']) returns<input id="submit" name="submit" type="submit" value="Purchase!">
         #and we'll copy this to the top of our submit button for altering
-        print(purchase_form.__dict__)
-    items = Item.query.all()
+        #let us import request from flask to be able to het the particular item clicked on for purchase
+        #print(request.form.get('purchase_item')) iPhone 14
+        purchased_item = request.form.get('purchased_item')
+        purchased_item_object = Item.query.filter_by(name=purchased_item).first()
+        if purchased_item_object:
+            #let us assign this Item to the current_user by importing it from FlaskLogin
+            
+            if current_user.budget > purchased_item_object.price:
+                current_user.budget -= purchased_item_object.price
+                purchased_item_object.owner = current_user.id
+                db.session.commit()
+            else:
+                flash(f'You do not have a sufficient balance to purchase this Item, Kindly increase your budget', category= 'danger')
+                
+    #moving forward, we want to display item that does yet have an owner on the market
+    #that technically means items that arent yet purchased  
+    #let us move from  items = Item.query.all()         
+    items = Item.query.filter_by(owner=None)
     
     """[{"id":1,"name":"phone","barcode":"8886","Price":1200},{
         "id":2,"name":"Keyboard","barcode":"8886","Price":5
