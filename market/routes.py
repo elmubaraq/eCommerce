@@ -29,6 +29,7 @@ def market_page():
                 current_user.budget -= purchased_item_object.price
                 purchased_item_object.owner = current_user.id
                 db.session.commit()
+                flash(f'You have successfully purchased {purchased_item}',category='success')
             else:
                 flash(f'You do not have a sufficient balance to purchase this Item, Kindly increase your budget', category= 'danger')
                 
@@ -36,6 +37,7 @@ def market_page():
     #that technically means items that arent yet purchased  
     #let us move from  items = Item.query.all()         
     items = Item.query.filter_by(owner=None)
+    
     
     """[{"id":1,"name":"phone","barcode":"8886","Price":1200},{
         "id":2,"name":"Keyboard","barcode":"8886","Price":5
