@@ -19,32 +19,29 @@ def market_page():
         #print(purchase_form['submit']) returns<input id="submit" name="submit" type="submit" value="Purchase!">
         #and we'll copy this to the top of our submit button for altering
         #let us import request from flask to be able to het the particular item clicked on for purchase
-        #print(request.form.get('purchase_item')) iPhone 14
+        print(request.form.get('purchased_item')) #iPhone 14
         purchased_item = request.form.get('purchased_item')
         purchased_item_object = Item.query.filter_by(name=purchased_item).first()
+        print(purchased_item_object)
         if purchased_item_object:
             #let us assign this Item to the current_user by importing it from FlaskLogin
             
-            if current_user.budget > purchased_item_object.price:
+            if current_user.can_purchase(purchased_item_object):
                 current_user.budget -= purchased_item_object.price
                 purchased_item_object.owner = current_user.id
                 db.session.commit()
-                flash(f'You have successfully purchased {purchased_item}',category='success')
-            else:
+                flash(f'You have successfully purchased {purchased_item}', category='success')
+            else:     
                 flash(f'You do not have a sufficient balance to purchase this Item, Kindly increase your budget', category= 'danger')
-                
-    #moving forward, we want to display item that does yet have an owner on the market
-    #that technically means items that arent yet purchased  
-    #let us move from  items = Item.query.all()         
+                #moving forward, we want to display item that does yet have an owner on the market
+                #that technically means items that arent yet purchased  
+                #let us move from  items = Item.query.all()   
+    #if request.method == "GET":
     items = Item.query.filter_by(owner=None)
-    
-    
-    """[{"id":1,"name":"phone","barcode":"8886","Price":1200},{
-        "id":2,"name":"Keyboard","barcode":"8886","Price":5
-        },{"id":3,"name":"Laptop","barcode":"8886","price":700
-            
-        }]"""
     return render_template('market.html', items = items, purchase_form = purchase_form)
+    
+    
+    
 @app.route("/register", methods=['GET','POST'])
 def register_page(): 
     form = RegistrationForm()
@@ -65,7 +62,7 @@ def register_page():
             flash(f'There was an error creating a user: {err_msg}',category='danger')
         
     return render_template('register.html', form=form)    
-@app.route('/login',methods=['GET','POST'])
+@app.route('/login', methods=['GET','POST'])
 def login_page():
     form = LoginForm()
     if form.validate_on_submit():
