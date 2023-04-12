@@ -14,7 +14,7 @@ def landing(param):
 @login_required
 def market_page():
     purchase_form = PurchaseItemForm()
-    if purchase_form.validate_on_submit():
+    if request.method == "POST":
         #note that the purchase_form is a dict with keys 'submit' which has also has html attribute
         #print(purchase_form['submit']) returns<input id="submit" name="submit" type="submit" value="Purchase!">
         #and we'll copy this to the top of our submit button for altering
@@ -36,9 +36,10 @@ def market_page():
                 #moving forward, we want to display item that does yet have an owner on the market
                 #that technically means items that arent yet purchased  
                 #let us move from  items = Item.query.all()   
-    #if request.method == "GET":
-    items = Item.query.filter_by(owner=None)
-    return render_template('market.html', items = items, purchase_form = purchase_form)
+        return redirect(url_for('market_page'))
+    if request.method == "GET":
+        items = Item.query.filter_by(owner=None)
+        return render_template('market.html', items = items, purchase_form = purchase_form)
     
     
     
