@@ -14,7 +14,10 @@ def landing(param):
 @login_required
 def market_page():
     purchase_form = PurchaseItemForm()
+    selling_form = SellItemForm()
     if request.method == "POST":
+        #Purchase Item Logic
+        
         #note that the purchase_form is a dict with keys 'submit' which has also has html attribute
         #print(purchase_form['submit']) returns<input id="submit" name="submit" type="submit" value="Purchase!">
         #and we'll copy this to the top of our submit button for altering
@@ -27,19 +30,31 @@ def market_page():
             #let us assign this Item to the current_user by importing it from FlaskLogin
             
             if current_user.can_purchase(purchased_item_object):
-                current_user.budget -= purchased_item_object.price
-                purchased_item_object.owner = current_user.id
-                db.session.commit()
+                purchased_item_object.buy(current_user)
                 flash(f'You have successfully purchased {purchased_item}', category='success')
+                
             else:     
                 flash(f'You do not have a sufficient balance to purchase this Item, Kindly increase your budget', category= 'danger')
                 #moving forward, we want to display item that does yet have an owner on the market
                 #that technically means items that arent yet purchased  
-                #let us move from  items = Item.query.all()   
+                #let us move from  items = Item.query.all() 
+        
+        #sold Item Logic
+        sell_item = request.form.get("sell_item")
+        sell_item_object= Item.query.filter_by(name=sell_item).first()
+        print(sell_item_object)
+        
+        if sell_item_object:
+            if current_user.can_sell(sell_item_object):
+                sell_item_object.sell(current_user)
+                flash(f"You have succesfully sold {sell_item_object.name} for {sell_item_object.price}$", category="success")
+            else:
+                 flash(f"Something went wrong!", cartegory="danger")
         return redirect(url_for('market_page'))
     if request.method == "GET":
         items = Item.query.filter_by(owner=None)
-        return render_template('market.html', items = items, purchase_form = purchase_form)
+        owned_items = Item.query.filter_by(owner = current_user.id)
+        return render_template('market.html', items = items, purchase_form = purchase_form, owned_items = owned_items, selling_form = selling_form )
     
     
     
@@ -47,21 +62,29 @@ def market_page():
 def register_page(): 
     form = RegistrationForm()
     if form.validate_on_submit():
-        user_to_create= User(username=form.username.data.strip(),
-                             email_address=form.email_address.data.strip(), password=form.password1.data)
+        if len(form.username.data) >3 and form.username.data not in "!@#$%^&*()-=+}{[] \" \<> '?/.,:;":
+            
+            
         
-        #with app.app_context():
-            #db.create_all()
-        db.session.add(user_to_create)
-        db.session.commit()
-        login_user(user_to_create)
-        flash(f'Hello {user_to_create.username}, Your  registration was successfully!', category="success")
-        return redirect(url_for('market_page'))
+            user_to_create= User(username=form.username.data.strip(),
+                                email_address=form.email_address.data.strip(), password=form.password1.data)
+            
+            #with app.app_context():
+                #db.create_all()
+            db.session.add(user_to_create)
+            db.session.commit()
+            login_user(user_to_create)
+            flash(f'Hello {user_to_create.username}, Your  registration was successfully!', category="success")
+            return redirect(url_for('market_page'))
+            if form.errors !={}: #if there are no  errors from the validations
+                 for err_msg in form.errors.values():
+                    flash(f'There was an error creating a user: {err_msg}',category='danger')
+        
+        else:
+            flash(f"Username should not contain special characters and must be upto 3 characters", category="danger")
+            
     
-    if form.errors !={}: #if there are no  errors from the validations
-        for err_msg in form.errors.values():
-            flash(f'There was an error creating a user: {err_msg}',category='danger')
-        
+    
     return render_template('register.html', form=form)    
 @app.route('/login', methods=['GET','POST'])
 def login_page():

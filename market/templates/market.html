@@ -59,6 +59,24 @@ Market Place
     </div>
     <div class="col-6 col-md-4"><h2><span style="font-weight:bold;">Owned Items</span></h2>
       <p> Click on Sell button to bring an item on to the market</p>
+      <br>
+      <div class="row">
+        {% for item in owned_items %}
+        {% include 'includes/selling_modal.html' %}
+          <div class="col-md-6">
+            
+            <div class="card w-50% h-50% text-center" style="margin-bottom: 5px;" >
+              <div class="card-body">
+                <h5 class="card-title">{{ item.name }}</h5>
+                <p class="card-text">{{ item.description }} <br> {{item.price}}$</p>
+                <button class="btn btn-outline btn-success" style="margin: 2px 2px;" data-bs-toggle="modal" data-bs-target="#selling-modal-{{item.id}}">Sell </button>        
+              </div>
+            </div>
+
+          </div>
+        {% endfor %}
+
+      </div>
       
     </div>
   </div>

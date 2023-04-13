@@ -29,7 +29,7 @@
                 <a class="nav-link active" aria-current="page" href="{{url_for('logout_page')}}">Logout</a>    
               </li> 
               <li class="nav-item">
-                <a class="nav-link">{{current_user.username}}</a>
+                <a class="nav-link">{{current_user.username.title()}}</a>
               </li>  
               <li class="nav-item">
                 <a class="nav-link" style="color: lawngreen; font-weight:bold;">
