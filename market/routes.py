@@ -61,30 +61,19 @@ def market_page():
 @app.route("/register", methods=['GET','POST'])
 def register_page(): 
     form = RegistrationForm()
-    if form.validate_on_submit():
-        if len(form.username.data) >3 and form.username.data not in "!@#$%^&*()-=+}{[] \" \<> '?/.,:;":
-            
-            
-        
-            user_to_create= User(username=form.username.data.strip(),
+    if form.validate_on_submit():   
+        user_to_create= User(username=form.username.data.strip(),
                                 email_address=form.email_address.data.strip(), password=form.password1.data)
             
-            #with app.app_context():
-                #db.create_all()
-            db.session.add(user_to_create)
-            db.session.commit()
-            login_user(user_to_create)
-            flash(f'Hello {user_to_create.username}, Your  registration was successfully!', category="success")
-            return redirect(url_for('market_page'))
-            if form.errors !={}: #if there are no  errors from the validations
-                 for err_msg in form.errors.values():
-                    flash(f'There was an error creating a user: {err_msg}',category='danger')
-        
-        else:
-            flash(f"Username should not contain special characters and must be upto 3 characters", category="danger")
+        #with app.app_context():
+        #db.create_all()
+        db.session.add(user_to_create)
+        db.session.commit()
+        return redirect(url_for('market_page'))
             
-    
-    
+    if form.errors !={}: #if there are no  errors from the validations
+        for err_msg in form.errors.values():
+                flash(f'There was an error creating a user: {err_msg}',category='danger')
     return render_template('register.html', form=form)    
 @app.route('/login', methods=['GET','POST'])
 def login_page():
