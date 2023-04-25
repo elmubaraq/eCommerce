@@ -60,8 +60,10 @@ def market_page():
     
 @app.route("/register", methods=['GET','POST'])
 def register_page(): 
+    
     form = RegistrationForm()
-    if form.validate_on_submit():   
+    if form.validate_on_submit():  
+         
         user_to_create= User(username=form.username.data.strip(),
                                 email_address=form.email_address.data.strip(), password=form.password1.data)
             
