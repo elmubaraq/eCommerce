@@ -7,6 +7,11 @@ class RegistrationForm(FlaskForm):
           user = User.query.filter_by(username=username_to_check.data).first()
           if user:
                raise ValidationError('Username already taken')
+          if len(username_to_check.data) <3:
+               raise ValidationError('Username must be upto 3 letters')
+          for char in username_to_check.data:
+               if char in "!@#$%^&*()-+=}{][|\:;'\"<>,.?/~`":
+                    raise ValidationError(f'Special characters like ({char}) are not allowed in a username, only underbar(_), letters, and numbers allowed!')   
      def validate_email_address(self,email_to_check):
           email= User.query.filter_by(email_address=email_to_check.data).first()
           if email:

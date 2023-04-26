@@ -71,6 +71,7 @@ def register_page():
         #db.create_all()
         db.session.add(user_to_create)
         db.session.commit()
+        login_user(User.query.filter_by(username=form.username.data).first())
         return redirect(url_for('market_page'))
             
     if form.errors !={}: #if there are no  errors from the validations
